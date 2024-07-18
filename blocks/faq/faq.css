@@ -1,33 +1,15 @@
-.faqs > div {
-  display: flex;
-  flex-direction: column;
-}
-
-.faqs img {
-  width: 100%;
-}
-
-.faqs > div > div {
-  order: 1;
-}
-
-.faqs > div > .faqs-img-col {
-  order: 0;
-}
-
-.faqs > div > .faqs-img-col img {
-  display: block;
-}
-
-@media (width >= 900px) {
-  .faqs > div {
-    align-items: center;
-    flex-direction: unset;
-    gap: 32px;
-  }
-
-  .faqs > div > div {
-    flex: 1;
-    order: unset;
-  }
+.faqs {
+.ques{
+  position: relative;
+      display: block;
+      text-decoration: none;
+      color: #121212;
+      padding: 1.25rem 2.5rem 1rem 1rem;
+      }
+      .ans{
+      transition: all .35s ease-in-out;
+          padding: 0 1rem 1.25rem;
+          width: 90%;
+          visibility: visible;
+          }
 }
