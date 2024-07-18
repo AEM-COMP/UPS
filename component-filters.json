@@ -27,13 +27,20 @@
       "title",
       "hero",
       "cards",
-      "columns"
+      "columns",
+      "faqs"
     ]
   },
   {
     "id": "cards",
     "components": [
       "card"
+    ]
+  },
+  {
+    "id": "faqs",
+    "components": [
+      "faq"
     ]
   },
   {"id": "section",
@@ -46,7 +53,8 @@
       "cards",
       "columns",
       "quote",
-      "teaser"
+      "teaser",
+      "faqs"
     ]
   }
 ]
