@@ -28,7 +28,8 @@
       "hero",
       "cards",
       "columns",
-      "faqs"
+      "faqs",
+      "faq"
     ]
   },
   {
@@ -54,7 +55,8 @@
       "columns",
       "quote",
       "teaser",
-      "faqs"
+      "faqs",
+      "faq"
     ]
   }
 ]
