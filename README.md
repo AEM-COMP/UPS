@@ -2,15 +2,10 @@
 Your project's description...
 
 ## Environments
-<<<<<<< HEAD
-- Preview: https://main--ups--aemsites.aem.page/
-- Live: https://main--ups--aemsites.aem.live/
-=======
 - Preview: https://main--{repo}--{owner}.hlx.page/
 -   https://main--crosswalk--aem-comp.hlx.page/
 - Live: https://main--{repo}--{owner}.hlx.live/
 - https://main--crosswalk--aem-comp.hlx.live/
->>>>>>> bddbe0d (initial)
 
 ## Installation
 
@@ -29,9 +24,5 @@ npm run lint
 1. Create a new repository based on the `aem-boilerplate` template and add a mountpoint in the `fstab.yaml`
 1. Add the [AEM Code Sync GitHub App](https://github.com/apps/aem-code-sync) to the repository
 1. Install the [AEM CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/aem-cli`
-1. Start AEM Proxy: `aem up` (opens your browser at `http://localhost:3000`)
-<<<<<<< HEAD
-1. Open the `ups` directory in your favorite IDE and start coding :)
-=======
+1. Start AEM Proxy: `aem up` (opens your browser at `http://localhost:3002`)
 1. Open the `{repo}` directory in your favorite IDE and start coding :)
->>>>>>> bddbe0d (initial)
