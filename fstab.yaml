@@ -1,5 +1,5 @@
 mountpoints:
   /:
-    url: "https://author-p98352-e1271924.adobeaemcloud.com/bin/franklin.delivery/AEM-COMP/UPS/feature/gowtham_column"
+    url: "https://author-p98352-e1271924.adobeaemcloud.com/bin/franklin.delivery/AEM-COMP/UPS/main"
     type: "markup"
     suffix: ".html"
