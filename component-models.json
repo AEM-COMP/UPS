@@ -245,25 +245,7 @@
         "valueType": "string"
       }
     ]
-  },{
-  "id": "faqs",
-  "fields": [
-    {
-      "component": "text",
-      "valueType": "string",
-      "name": "heading",
-      "value": "FAQ",
-      "label": "FAQ Heading"
-    },
-    {
-      "component": "text",
-      "valueType": "number",
-      "name": "questions",
-      "value": "",
-      "label": "Number of Questions"
-    }
-  ]
-},
+  },
   {
     "id": "faq",
     "fields": [

@@ -28,8 +28,7 @@
       "hero",
       "cards",
       "columns",
-      "faqs",
-      "faq"
+      "faqs"
     ]
   },
   {
@@ -41,6 +40,7 @@
   {
     "id": "faqs",
     "components": [
+      "text",
       "faq"
     ]
   },
@@ -55,8 +55,7 @@
       "columns",
       "quote",
       "teaser",
-      "faqs",
-      "faq"
+      "faqs"
     ]
   }
 ]
