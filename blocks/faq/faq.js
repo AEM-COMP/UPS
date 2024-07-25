@@ -1,7 +1,7 @@
 /*
- * Accordion Block
- * Recreate an accordion
- * https://www.hlx.live/developer/block-collection/accordion
+ * faqs Block
+ * Recreate an faqs
+ * https://www.hlx.live/developer/block-collection/faqs
  */
 function toggleState(details, forceExpanded = null) {
   const open = forceExpanded !== null ? forceExpanded : !details.open;
@@ -20,24 +20,24 @@ function toggleState(details, forceExpanded = null) {
 
 export default function decorate(block) {
   [...block.children].forEach((row) => {
-    // decorate accordion item label
+    // decorate faqs item label
     const label = row.children[0];
     const summary = document.createElement('summary');
-    summary.className = 'accordion-item-label';
+    summary.className = 'faqs-item-label';
     summary.append(...label.childNodes);
 
-    // decorate accordion item body
+    // decorate faqs item body
     const body = row.children[1];
-    body.className = 'accordion-item-body';
+    body.className = 'faqs-item-body';
 
-    const accordionContent = document.createElement('div');
-    accordionContent.className = 'accordion-item-content';
-    accordionContent.append(...body.childNodes);
-    body.append(accordionContent);
+    const faqsContent = document.createElement('div');
+    faqsContent.className = 'faqs-item-content';
+    faqsContent.append(...body.childNodes);
+    body.append(faqsContent);
 
-    // decorate accordion item
+    // decorate faqs item
     const details = document.createElement('details');
-    details.className = 'accordion-item';
+    details.className = 'faqs-item';
     details.append(summary, body);
     row.replaceWith(details);
   });

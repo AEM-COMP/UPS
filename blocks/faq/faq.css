@@ -1,22 +1,22 @@
-.accordion {
+.faqs {
   max-width: 800px;
   margin: auto;
 }
 
-.accordion details {
+.faqs details {
   margin-top: .625rem;
   border-radius: 4px;
   box-shadow: 0 4px 12px -3px rgba(0 0 0 / 5.1%), 0 2px 5px 0 rgba(0 0 0 / 14.1%);
 }
 
 
-.accordion details[open],
-.accordion details:focus,
-.accordion details:hover {
+.faqs details[open],
+.faqs details:focus,
+.faqs details:hover {
   box-shadow: 0 15px 32px -3px rgba(0 0 0 / 7.8%), 0 4px 12px -2px rgba(0 0 0 / 7.8%), 0 2px 6px 0 rgba(0 0 0 / 5.9%);
 }
 
-.accordion details summary {
+.faqs details summary {
   position: relative;
   list-style: none;
   display: block;
@@ -26,20 +26,20 @@
   cursor: pointer;
 }
 
-.accordion details summary p {
+.faqs details summary p {
   margin: 0;
   line-height: 1.5;
 }
 
-.accordion details[open] summary {
+.faqs details[open] summary {
   font-weight: 500;
 }
 
-.accordion details summary::-webkit-details-marker {
+.faqs details summary::-webkit-details-marker {
   display: none;
 }
 
-.accordion details summary::after {
+.faqs details summary::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -52,22 +52,22 @@
   transition: transform 0.2s;
 }
 
-.accordion details[open] summary::after {
+.faqs details[open] summary::after {
   transform: translateY(-50%) rotate(-45deg);
 }
 
-.accordion details .accordion-item-body {
+.faqs details .faqs-item-body {
   display: grid;
   grid-template-rows: 0fr;
   transition: all 0.5s ease-in-out;
   padding-inline: 1rem;
 }
 
-.accordion details.open .accordion-item-body {
+.faqs details.open .faqs-item-body {
   grid-template-rows: 1fr;
   padding-block: 0 1.25rem;
 }
 
-.accordion details .accordion-item-body .accordion-item-content {
+.faqs details .faqs-item-body .faqs-item-content {
   overflow: hidden;
 }
