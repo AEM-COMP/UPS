@@ -260,7 +260,7 @@
         "component": "richtext",
         "valueType": "string",
         "name": "answer",
-        "label": "answer",
+        "label": "Answer",
         "value": ""
       }
     ]
