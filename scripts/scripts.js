@@ -1,8 +1,9 @@
 import {
   sampleRUM,
+  buildBlock,
   loadHeader,
   loadFooter,
-  decorateButtons,
+  // decorateButtons,
   decorateIcons,
   decorateSections,
   decorateBlocks,
@@ -10,43 +11,10 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
+  toClassName,
 } from './aem.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
-
-/**
- * Moves all the attributes from a given elmenet to another given element.
- * @param {Element} from the element to copy attributes from
- * @param {Element} to the element to copy attributes to
- */
-export function moveAttributes(from, to, attributes) {
-  if (!attributes) {
-    // eslint-disable-next-line no-param-reassign
-    attributes = [...from.attributes].map(({ nodeName }) => nodeName);
-  }
-  attributes.forEach((attr) => {
-    const value = from.getAttribute(attr);
-    if (value) {
-      to.setAttribute(attr, value);
-      from.removeAttribute(attr);
-    }
-  });
-}
-
-/**
- * Move instrumentation attributes from a given element to another given element.
- * @param {Element} from the element to copy attributes from
- * @param {Element} to the element to copy attributes to
- */
-export function moveInstrumentation(from, to) {
-  moveAttributes(
-    from,
-    to,
-    [...from.attributes]
-      .map(({ nodeName }) => nodeName)
-      .filter((attr) => attr.startsWith('data-aue-') || attr.startsWith('data-richtext-')),
-  );
-}
 
 /**
  * load fonts.css and set a session storage flag
@@ -60,17 +28,165 @@ async function loadFonts() {
   }
 }
 
+function buildLinkLists(main) {
+  main.querySelectorAll('.section > .default-content-wrapper > ul').forEach((ul) => {
+    const allFlatLinks = [...ul.querySelectorAll('li')].every((li) => li.childElementCount === 1 && li.firstElementChild.tagName === 'A');
+    if (!allFlatLinks) return;
+
+    const defaultContentWrapper = ul.parentElement;
+    const listWrapper = document.createElement('div');
+    defaultContentWrapper.after(listWrapper);
+    if (ul.nextElementSibling) {
+      const afterListWrapper = document.createElement('div');
+      afterListWrapper.className = 'default-content-wrapper';
+      listWrapper.after(afterListWrapper);
+      while (ul.nextElementSibling) afterListWrapper.append(ul.nextElementSibling);
+    }
+
+    const linkListBlock = buildBlock('link-list', [[ul]]);
+    listWrapper.append(linkListBlock);
+  });
+}
+
 /**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
-function buildAutoBlocks() {
+function buildAutoBlocks(main) {
   try {
-    // TODO: add auto block, if needed
+    buildLinkLists(main);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
   }
+}
+
+/**
+ * Decorates links with appropriate classes to style them as buttons
+ * @param {HTMLElement} main The main container element
+ */
+function decorateButtons(main) {
+  main.querySelectorAll('p a[href]').forEach((a) => {
+    a.title = a.title || a.textContent;
+    const p = a.closest('p');
+    // identify standalone links
+    if (a.href !== a.textContent && p.textContent === a.textContent) {
+      a.className = 'button';
+      const strong = a.closest('strong');
+      const em = a.closest('em');
+      const double = !!strong && !!em;
+      if (double) a.classList.add('accent');
+      else if (strong) a.classList.add('emphasis');
+      else if (em) a.classList.add('outline');
+      p.className = 'button-wrapper';
+      p.replaceChildren(a);
+    }
+  });
+}
+
+const iconLoadingPromises = {};
+async function loadIconSvg(icon, doc = document) {
+  if (!icon) return;
+
+  let svgSprite = doc.getElementById('svg-sprite');
+  if (!svgSprite) {
+    const div = document.createElement('div');
+    div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" id="svg-sprite" style="display: none"></svg>';
+    svgSprite = div.firstElementChild;
+    doc.body.append(svgSprite);
+  }
+
+  const { iconName } = icon.dataset;
+  if (!iconLoadingPromises[iconName]) {
+    iconLoadingPromises[iconName] = (async () => {
+      const resp = await fetch(icon.src);
+      const temp = document.createElement('div');
+      temp.innerHTML = await resp.text();
+      const svg = temp.querySelector('svg');
+
+      const symbol = document.createElementNS('http://www.w3.org/2000/svg', 'symbol');
+      symbol.id = `icons-sprite-${iconName}`;
+      symbol.setAttribute('viewBox', svg.getAttribute('viewBox'));
+      while (svg.firstElementChild) symbol.append(svg.firstElementChild);
+      svgSprite.append(symbol);
+    })();
+  }
+  await iconLoadingPromises[iconName];
+
+  const temp = document.createElement('div');
+  temp.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-${iconName}"/></svg>`;
+  icon.replaceWith(temp.firstElementChild);
+}
+
+/**
+ * Observes an icon span and loads the SVG when it becomes visible
+ * @param {Element} iconSpan the span element for the given icon
+ */
+export function useSvgForIcon(iconSpan) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        loadIconSvg(entry.target.querySelector('img'));
+        observer.disconnect();
+      }
+    });
+  });
+  observer.observe(iconSpan);
+}
+
+/**
+ * create keylines from heading elements
+ * @param {Element} heading the heading element
+ */
+export function createKeyLine(heading) {
+  const u = heading.querySelector('u') || document.createElement('u');
+  heading.classList.add('keyline');
+  u.textContent = heading.textContent;
+  heading.replaceChildren(u);
+}
+
+function decorateHeadings(main) {
+  [...main.querySelectorAll('.default-content-wrapper > h2')].forEach((h2) => {
+    const defaultContentWrapper = h2.parentElement;
+    const subsequentBlockWrapper = defaultContentWrapper.nextElementSibling;
+    if (!subsequentBlockWrapper) return;
+
+    createKeyLine(h2);
+    const headingFor = subsequentBlockWrapper.className.replace('-wrapper', '');
+    defaultContentWrapper.classList.add('block-heading', `${headingFor}-block-heading`);
+  });
+
+  [...main.querySelectorAll('.default-content-wrapper > :where(h3, h4, h5, h6)')]
+    .filter((h) => !!h.querySelector('u'))
+    .forEach(createKeyLine);
+}
+
+function decorateLinks(main) {
+  main.querySelectorAll('a[href]').forEach((a) => {
+    const url = new URL(a.href);
+    // protect against maito: links or other weirdness
+    const isHttp = url.protocol === 'https:' || url.protocol === 'http:';
+    if (!isHttp) return;
+
+    const knownDomains = ['www.ups.com', 'hlx.page', 'hlx.live', 'aem.page', 'aem.live'];
+    if (!url.hostname.includes('localhost') && !knownDomains.some((host) => url.hostname.includes(host))) {
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+
+      const newWindowIcon = document.createElement('span');
+      newWindowIcon.className = 'icon icon-new-window';
+      a.append(newWindowIcon);
+      a.classList.add('external-link');
+      useSvgForIcon(newWindowIcon);
+    }
+  });
+}
+
+function decorateImages(main) {
+  main.querySelectorAll('p img').forEach((img) => {
+    const p = img.closest('p');
+    p.className = 'img-wrapper';
+  });
 }
 
 /**
@@ -79,12 +195,14 @@ function buildAutoBlocks() {
  */
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
-  // hopefully forward compatible button decoration
-  decorateButtons(main);
-  decorateIcons(main);
-  buildAutoBlocks(main);
   decorateSections(main);
+  buildAutoBlocks(main);
   decorateBlocks(main);
+  decorateHeadings(main);
+  decorateLinks(main);
+  decorateButtons(main);
+  decorateImages(main);
+  decorateIcons(main);
 }
 
 /**
@@ -109,6 +227,17 @@ async function loadEager(doc) {
   } catch (e) {
     // do nothing
   }
+}
+
+/**
+ * build a symbol element
+ * @param {String} name the symbol name
+ * @returns {Element} the symbol
+ */
+export function buildSymbol(name) {
+  const icon = document.createElement('i');
+  icon.className = `symbol symbol-${toClassName(name)}`;
+  return icon;
 }
 
 /**
@@ -142,7 +271,6 @@ function loadDelayed() {
   // eslint-disable-next-line import/no-cycle
   window.setTimeout(() => import('./delayed.js'), 3000);
   // load anything that can be postponed to the latest here
-  import('./sidekick.js').then(({ initSidekick }) => initSidekick());
 }
 
 async function loadPage() {

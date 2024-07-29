@@ -1,0 +1,24 @@
+.track {
+  width: 100%;
+  height: 140px;
+  position: relative;
+}
+
+.track::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: hsl(from var(--blue) h s l / 75%)
+}
+
+.track::before {
+  content: "Track Block";
+  position: absolute;
+  inset: 0;
+  color: orangered;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  z-index: 2;
+}

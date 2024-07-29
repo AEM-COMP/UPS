@@ -1,7 +1,11 @@
 // eslint-disable-next-line import/no-cycle
 import { sampleRUM } from './aem.js';
 
-// Core Web Vitals RUM collection
-sampleRUM('cwv');
+async function delayed() {
+  // Core Web Vitals RUM collection
+  sampleRUM('cwv');
 
-// add more delayed functionality here
+  // add more delayed functionality here
+}
+
+delayed();

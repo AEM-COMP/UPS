@@ -1,6 +1,19 @@
-export default function decorate(block) {
-  const [quoteWrapper] = block.children;
-  const blockquote = document.createElement("blockquote");
-  blockquote.textContent = quoteWrapper.textContent.trim();
-  quoteWrapper.replaceChildren(blockquote);
+/**
+ * decorate the quote block
+ * @param {Element} block the block element
+ */
+export default async function decorate(block) {
+  const observer = new IntersectionObserver((entries) => {
+    const wrappingJobsBlock = block.closest('.block.jobs');
+    if (!wrappingJobsBlock) return;
+
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        wrappingJobsBlock.classList.add('hide-hero-img');
+      } else {
+        wrappingJobsBlock.classList.remove('hide-hero-img');
+      }
+    });
+  });
+  observer.observe(block);
 }
