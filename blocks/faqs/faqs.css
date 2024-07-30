@@ -1,33 +1,73 @@
-.faqs > div {
-  display: flex;
-  flex-direction: column;
+.faqs {
+  max-width: 800px;
+  margin: auto;
 }
 
-.faqs img {
-  width: 100%;
+.faqs details {
+  margin-top: .625rem;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px -3px rgba(0 0 0 / 5.1%), 0 2px 5px 0 rgba(0 0 0 / 14.1%);
 }
 
-.faqs > div > div {
-  order: 1;
+
+.faqs details[open],
+.faqs details:focus,
+.faqs details:hover {
+  box-shadow: 0 15px 32px -3px rgba(0 0 0 / 7.8%), 0 4px 12px -2px rgba(0 0 0 / 7.8%), 0 2px 6px 0 rgba(0 0 0 / 5.9%);
 }
 
-.faqs > div > .faqs-img-col {
-  order: 0;
-}
-
-.faqs > div > .faqs-img-col img {
+.faqs details summary {
+  position: relative;
+  list-style: none;
   display: block;
+  text-decoration: none;
+  color: #121212;
+  padding: 1.25rem 2.5rem 1rem 1rem;
+  cursor: pointer;
 }
 
-@media (width >= 900px) {
-  .faqs > div {
-    align-items: center;
-    flex-direction: unset;
-    gap: 32px;
-  }
+.faqs details summary p {
+  margin: 0;
+  line-height: 1.5;
+}
 
-  .faqs > div > div {
-    flex: 1;
-    order: unset;
-  }
+.faqs details[open] summary {
+  font-weight: 500;
+}
+
+.faqs details summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqs details summary::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  transform: translateY(-50%) rotate(135deg);
+  width: 9px;
+  height: 9px;
+  border: 2px solid;
+  border-width: 2px 2px 0 0;
+  transition: transform 0.2s;
+}
+
+.faqs details[open] summary::after {
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+.faqs details .faqs-item-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: all 0.5s ease-in-out;
+  padding-inline: 1rem;
+}
+
+.faqs details.open .faqs-item-body {
+  grid-template-rows: 1fr;
+  padding-block: 0 1.25rem;
+}
+
+.faqs details .faqs-item-body .faqs-item-content {
+  overflow: hidden;
 }
